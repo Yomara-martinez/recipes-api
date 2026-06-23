@@ -1,0 +1,25 @@
+{
+  "name": "recipes-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "yomara": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yomara-martinez/recipes-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Yomara-martinez/recipes-api/issues"
+  },
+  "homepage": "https://github.com/Yomara-martinez/recipes-api#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
