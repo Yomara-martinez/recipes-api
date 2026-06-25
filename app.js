@@ -51,19 +51,35 @@ let nextId = 6;
 app.use(middleware);
 
 
-app.get("/api/recipes/", (req, res) => {
+app.get("/api/recipes/", (req, res, next ) => {
+
+try{
+
   res.json(recipes);
+
+}catch(err){
+next(err)
+  }
 });
-app.get("/api/recipes/:id", (req, res) => {
+app.get("/api/recipes/:id", (req, res, next ) => {
+
+    try{
   const getRecipe = Number(req.params.id);
   const found = recipes.find((elem) => elem.id === getRecipe);
   if (!found) {
     return res.status(404).json({ message: "Item not found" });
   }
   res.json(found);
+
+}
+catch(err){
+    next(err)
+}
 });
-app.post("/api/recipes", secondMiddleware, (req, res) => {
+app.post("/api/recipes", secondMiddleware, (req, res, next ) => {
  // console.log("POST recipe req.body", req.body);
+try{
+
   const { title, cuisine, minutes, servings, vegetarian } = req.body;
   const newRecipe = {
     id: nextId++,
@@ -75,9 +91,18 @@ app.post("/api/recipes", secondMiddleware, (req, res) => {
   };
   recipes.push(newRecipe);
   res.status(201).json(newRecipe);
+
+}
+
+catch(err){
+    next(err)
+}
 });
 
-app.patch("/api/recipes/:id", (req, res) => {
+app.patch("/api/recipes/:id", (req, res, next ) => {
+
+try{
+
   const recipeId = Number(req.params.id);
   const { title, cuisine, minutes, servings, vegetarian } = req.body;
   const foundRecipe = recipes.find((elem) => elem.id === recipeId);
@@ -87,9 +112,15 @@ app.patch("/api/recipes/:id", (req, res) => {
   } else {
     res.status(404).json({ message: "Item not found" });
   }
+}catch(err){
+    next(err)
+}
 });
 
-app.delete("/api/recipes/:id", (req, res) => { //try slice in book
+app.delete("/api/recipes/:id", (req, res, next) => { //try slice in book
+
+    try{
+
   const recipeId = Number(req.params.id);
   const foundRecipe = recipes.find((elem) => elem.id === recipeId);
   if (!foundRecipe) {
@@ -99,6 +130,10 @@ app.delete("/api/recipes/:id", (req, res) => { //try slice in book
   recipes = newRecipes;
 
   res.json(newRecipes)
+}
+catch(err){
+    next(err)
+}
 });
 
 
@@ -121,10 +156,10 @@ function secondMiddleware(req, res, next) {
 next()
   }
 
-
-
-
-
+function errorHandler(err, req, res, next ) {
+  console.error(err);
+  res.sendStatus(500);
+}
 
 
 
