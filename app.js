@@ -48,6 +48,9 @@ let recipes = [
 
 let nextId = 6;
 
+app.use(middleware);
+
+
 app.get("/api/recipes/", (req, res) => {
   res.json(recipes);
 });
@@ -59,24 +62,8 @@ app.get("/api/recipes/:id", (req, res) => {
   }
   res.json(found);
 });
-
-app.post("/api/recipes", (req, res) => {
-  console.log("POST recipe req.body", req.body);
-  const { title, cuisine, minutes, servings, vegetarian } = req.body;
-  const newRecipe = {
-    id: nextId++,
-    title,
-    cuisine,
-    minutes,
-    servings,
-    vegetarian,
-  };
-  recipes.push(newRecipe);
-  res.status(201).json(newRecipe);
-});
-
-app.post("/api/recipes", (req, res) => {
-  console.log("POST recipe req.body", req.body);
+app.post("/api/recipes", secondMiddleware, (req, res) => {
+ // console.log("POST recipe req.body", req.body);
   const { title, cuisine, minutes, servings, vegetarian } = req.body;
   const newRecipe = {
     id: nextId++,
@@ -113,6 +100,33 @@ app.delete("/api/recipes/:id", (req, res) => { //try slice in book
 
   res.json(newRecipes)
 });
+
+
+ function middleware(req, res, next) {
+   console.log(req.method, req.originalUrl);
+   next();
+ }
+
+
+  
+function secondMiddleware(req, res, next) {
+
+  const{ title, cuisine } = req.body;
+  
+  if (title && cuisine) {
+  
+  } else{
+     res.status(400).send("ERROR");
+  }
+next()
+  }
+
+
+
+
+
+
+
 
 
 app.listen(8080, () => console.log("Server running on port 8080"));
